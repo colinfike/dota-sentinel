@@ -8,6 +8,8 @@ const roleMap = {
   5: 'Hard Support',
 }
 
+const chrisAccountId = 608275
+
 function formatTime (seconds) {
   let sign = ''
   if (seconds < 0) {
@@ -31,6 +33,14 @@ function formatName (name, chrisName) {
     name = '<span style="color:red;">Chris</span>'
   }
   return name ? name : 'unknown'
+}
+
+function isLeastKills (players) {
+  return _.sortBy(players, 'kills')[0].account_id === chrisAccountId
+}
+
+function isMostDeaths (players) {
+  return _.sortBy(players, 'deaths')[9].account_id === chrisAccountId
 }
 
 
@@ -88,6 +98,12 @@ recentMatchRequest.onreadystatechange = function () {
 
         let role = document.getElementById('role-text');
         role.innerHTML = 'Role: ' + roleMap[parseInt(chris.lane_role)];
+
+        let kill = document.getElementById('kill-text');
+        kill.innerHTML = 'Least Kills? ' + (isLeastKills(parsedResponse.players) ? 'Yes' : 'No');
+
+        let death = document.getElementById('death-text');
+        death.innerHTML = 'Most Deaths? ' + (isMostDeaths(parsedResponse.players) ? 'Yes' : 'No');
       }
     }
     matchResult.send();
